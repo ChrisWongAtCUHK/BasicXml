@@ -4,18 +4,19 @@ using XmlClassLibrary;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
+using System.IO;
 
 namespace XmlUnitTestProject
 {
     [TestClass]
     public class CRUDUnitTest
     {
-        ContactsXmlHelper contactsXmlHelper = new ContactsXmlHelper(@"Contacts.xml");
+        const string filePath = @"Contacts.xml";
+        ContactsXmlHelper contactsXmlHelper = new ContactsXmlHelper(filePath);
 
         [TestMethod]
         public void CreateTest()
         {
-            contactsXmlHelper.Create();
             contactsXmlHelper.Add("Chris", "Wong", "chriswong@gmail.com");
             contactsXmlHelper.Add("Bill", "Gates", "billdates@gmail.com");
             contactsXmlHelper.Add("Steve", "Jobs", "stevejobs@gmail.com");
@@ -41,6 +42,21 @@ namespace XmlUnitTestProject
         public void UpdateTest()
         {
             contactsXmlHelper.UpdateByEmail("Chris", "WWW", "chriswong@gmail.com");
+        }
+
+        [TestMethod]
+        public void DeleteTest()
+        {
+            contactsXmlHelper.Delete("chriswong@gmail.com");
+        }
+
+        [TestMethod]
+        public void Cleanup()
+        {
+            if(File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
     }
 }

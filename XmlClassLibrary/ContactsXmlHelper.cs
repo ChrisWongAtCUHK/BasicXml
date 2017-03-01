@@ -35,34 +35,8 @@ namespace XmlClassLibrary
 
             // if the file exists, add directly
             this.doc = XDocument.Load(filePath);
-
         }
 
-        /// <summary>
-        /// Create the xml with root element
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="email"></param>
-        public void Create()
-        {
-            // for simlicity, clean up
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            // if the file does not exist, create it first
-            using (XmlWriter writer = XmlWriter.Create(filePath))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("Contacts");
-
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-            }
-
-        }
 
         /// <summary>
         /// Add node
@@ -115,19 +89,28 @@ namespace XmlClassLibrary
         /// <param name="email"></param>
         public void UpdateByEmail(string firstName, string lastName, string email)
         {
-            if (System.IO.File.Exists(filePath))
-            {
+            var contact = Read(email);
 
-                // Note: invoke Read(string email) could not update the node
-                var contact = Read(email);
-
-                contact.Element("FirstName").Value = firstName;
-                contact.Element("LastName").Value = lastName;
-                doc.Save(filePath);
-            }
-
+            // for simplicity, no check for null contact
+            contact.Element("FirstName").Value = firstName;
+            contact.Element("LastName").Value = lastName;
+            doc.Save(filePath);
         }
-        // delete
+
+        /// <summary>
+        /// Delete a node value by searching it with email address
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="email"></param>
+        public void Delete(string email)
+        {
+            var contact = Read(email);
+
+            // for simplicity, no check for null contact
+            contact.Remove();
+            doc.Save(filePath);
+        }
 
     }
 }
