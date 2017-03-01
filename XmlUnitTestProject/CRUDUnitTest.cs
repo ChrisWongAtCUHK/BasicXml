@@ -12,7 +12,10 @@ namespace XmlUnitTestProject
         [TestMethod]
         public void CreateTest()
         {
-            contactsXmlHelper.Create("Chris", "Wong", "chriswong@gmail.com");
+            contactsXmlHelper.Create();
+            contactsXmlHelper.Add("Chris", "Wong", "chriswong@gmail.com");
+            contactsXmlHelper.Add("Bill", "Gates", "billdates@gmail.com");
+            contactsXmlHelper.Add("Steve", "Jobs", "stevejobs@gmail.com");
         }
     }
 }

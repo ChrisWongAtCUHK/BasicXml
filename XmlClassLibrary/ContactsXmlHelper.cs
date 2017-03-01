@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -17,15 +18,38 @@ namespace XmlClassLibrary
         /// <param name="filePath"></param>
         public ContactsXmlHelper(string filePath)
         {
-            // there
-            Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
             this.filePath = filePath;
         }
 
-        // create
-        public void Create(string firstName, string lastName, string email)
+        /// <summary>
+        /// Create the xml with root element
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="email"></param>
+        public void Create()
         {
-            if (System.IO.File.Exists(filePath))
+            // for simlicity, clean up
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            // if the file does not exist, create it first
+            using (XmlWriter writer = XmlWriter.Create(filePath))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Contacts");
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
+        }
+
+        public void Add(string firstName, string lastName, string email)
+        {
+            if (File.Exists(filePath))
             {
                 // if the file exists, add directly
                 XDocument doc = XDocument.Load(filePath);
@@ -38,26 +62,6 @@ namespace XmlClassLibrary
                              )
                 );
                 doc.Save(filePath);
-            }
-            else
-            {
-                // if the file does not exist, create it first
-                using (XmlWriter writer = XmlWriter.Create(filePath))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("Contacts");
-
-                    #region Session
-                    writer.WriteStartElement("Contact");
-                    writer.WriteElementString("FirstName", firstName);
-                    writer.WriteElementString("LastName", lastName);
-                    writer.WriteElementString("Email", email);
-                    writer.WriteEndElement();
-                    #endregion // end Contact
-
-                    writer.WriteEndElement();
-                    writer.WriteEndDocument();
-                }
             }
         }
 
